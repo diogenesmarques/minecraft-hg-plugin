@@ -2,3 +2,7 @@ main: plugin.Main
 name: PluginHG
 version: 1.0.0
 author: Diogenes
+api-version: 1.13
+commands:
+  kits:
+  kit:
