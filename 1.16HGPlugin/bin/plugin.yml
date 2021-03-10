@@ -1,0 +1,4 @@
+main: plugin.Main
+name: PluginHG
+version: 1.0.0
+author: Diogenes
