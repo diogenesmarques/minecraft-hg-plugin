@@ -17,6 +17,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.inventory.ItemStack;
 
 import States.GameStates;
@@ -108,5 +110,21 @@ public class Events implements Listener {
 			}
 		}
 	}
+	
+	@EventHandler
+	public void onPlayerTryingToJoinAGameThatHasAlreadyStarted(PlayerLoginEvent event) {
+		if(GameStates.getState() != GameStates.STARTING) {
+			event.disallow(Result.KICK_OTHER, "The tournament has already started");
+		}
+	}
 
 }
+
+
+
+
+
+
+
+
+

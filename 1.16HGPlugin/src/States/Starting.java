@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import kits.Kit;
+import kits.KitEvents;
 import plugin.Main;
 
 public class Starting {
@@ -38,14 +38,11 @@ public class Starting {
 							for(Player player : Bukkit.getOnlinePlayers()) {
 								player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_PLACE, 10, 1);
 								player.teleport(player.getWorld().getSpawnLocation());
-								
+								KitEvents.givePlayerKitItems(player);
 								player.getInventory().addItem(new ItemStack(Material.COMPASS));
 								
-								
-								if(Kit.getKit(player.getName()) == Kit.Archer) {
-									
-								}
 							}
+													
 							GameStates.setState(GameStates.INVINCIBILITY);
 							Invincibility.timer();
 						}
