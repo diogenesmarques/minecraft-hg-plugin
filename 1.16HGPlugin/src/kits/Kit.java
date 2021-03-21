@@ -3,7 +3,7 @@ package kits;
 import java.util.HashMap;
 
 public enum Kit {
-	Anchor, Archer, Assassin, Barbarian, Beastmaster,
+	Achilles, Anchor, Archer, Assassin, Barbarian, Beastmaster,
 	Berserker, Cannibal, Copycat, Cultivator, Demoman, Fireman,
 	Endermage, Gladiator, Grappler, Kangaroo, Lumberjack, Madman, 
 	Monk, Ninja, Phantom, Pickpocket, Pyro,Snail, Stomper, Surprise,

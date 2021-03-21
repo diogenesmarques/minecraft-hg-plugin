@@ -8,11 +8,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.util.Vector;
 
 public class KitEvents implements Listener {
@@ -28,6 +28,11 @@ public class KitEvents implements Listener {
 			player.getInventory().addItem(new ItemStack(Material.WOLF_SPAWN_EGG, 3));
 			player.getInventory().addItem(new ItemStack(Material.BONE, 4));
 		}
+		
+		if(Kit.getKit(player.getName()) == Kit.Fireman) {
+			player.getInventory().addItem(new ItemStack(Material.WATER_BUCKET, 1));
+		}
+		
 	}
 
 	@EventHandler
@@ -89,5 +94,41 @@ public class KitEvents implements Listener {
 			}
 		}
 	}
+	
+	@EventHandler
+	public void achilles(EntityDamageByEntityEvent event) {
+		if((event.getEntity() instanceof Player) && (event.getDamager() instanceof Player)) {
+			if(Kit.getKit(event.getEntity().getName()) == Kit.Achilles) {
+				if(((Player) event.getDamager()).getInventory().getItemInMainHand().toString().contains("WOODEN")) {
+					event.setDamage(event.getDamage() + 4);
+				}else {
+					event.setDamage(event.getDamage() - 3);
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void fireman(EntityDamageEvent event) {
+		if(!(event.getEntity() instanceof Player)) return;
+		if(Kit.getKit(event.getEntity().getName()) == Kit.Fireman) {
+			if((event.getCause().toString().contains("FIRE")) || (event.getCause().toString().contains("LAVA"))) {
+				event.setCancelled(true);
+			}
+		}
+	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
