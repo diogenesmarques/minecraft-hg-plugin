@@ -94,7 +94,7 @@ public class Events implements Listener {
 	public void onCompassRightClick(PlayerInteractEvent event) {
 		Player player = (Player) event.getPlayer();
 		if (player.getInventory().getItemInMainHand().getType() == Material.COMPASS) {
-			if (event.getAction() != Action.PHYSICAL) {
+			if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 				ArrayList<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers().stream()
 						.filter(s -> !s.equals(player)).filter(s -> s.getLocation().distance(player.getLocation()) > 10)
 						.collect(Collectors.toList()));

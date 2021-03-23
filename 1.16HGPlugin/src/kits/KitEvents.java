@@ -6,10 +6,13 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -28,11 +31,15 @@ public class KitEvents implements Listener {
 			player.getInventory().addItem(new ItemStack(Material.WOLF_SPAWN_EGG, 3));
 			player.getInventory().addItem(new ItemStack(Material.BONE, 4));
 		}
-		
-		if(Kit.getKit(player.getName()) == Kit.Fireman) {
+
+		if (Kit.getKit(player.getName()) == Kit.Fireman) {
 			player.getInventory().addItem(new ItemStack(Material.WATER_BUCKET, 1));
 		}
-		
+
+		if (Kit.getKit(player.getName()) == Kit.Thor) {
+			player.getInventory().addItem(new ItemStack(Material.WOODEN_AXE));
+		}
+
 	}
 
 	@EventHandler
@@ -94,31 +101,75 @@ public class KitEvents implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void achilles(EntityDamageByEntityEvent event) {
-		if((event.getEntity() instanceof Player) && (event.getDamager() instanceof Player)) {
-			if(Kit.getKit(event.getEntity().getName()) == Kit.Achilles) {
-				if(((Player) event.getDamager()).getInventory().getItemInMainHand().toString().contains("WOODEN")) {
+		if ((event.getEntity() instanceof Player) && (event.getDamager() instanceof Player)) {
+			if (Kit.getKit(event.getEntity().getName()) == Kit.Achilles) {
+				if (((Player) event.getDamager()).getInventory().getItemInMainHand().toString().contains("WOODEN")) {
 					event.setDamage(event.getDamage() + 4);
-				}else {
+				} else {
 					event.setDamage(event.getDamage() - 3);
 				}
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void fireman(EntityDamageEvent event) {
-		if(!(event.getEntity() instanceof Player)) return;
-		if(Kit.getKit(event.getEntity().getName()) == Kit.Fireman) {
-			if((event.getCause().toString().contains("FIRE")) || (event.getCause().toString().contains("LAVA"))) {
+		if (!(event.getEntity() instanceof Player))
+			return;
+		if (Kit.getKit(event.getEntity().getName()) == Kit.Fireman) {
+			if ((event.getCause().toString().contains("FIRE")) || (event.getCause().toString().contains("LAVA"))) {
 				event.setCancelled(true);
 			}
 		}
 	}
 
+	@EventHandler
+	public void thor(PlayerInteractEvent event) {
+		if (Kit.getKit(event.getPlayer().getName()) == Kit.Thor) {
+			if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+				if (event.getPlayer().getInventory().getItemInMainHand().getType() == Material.WOODEN_AXE) {
+					event.getPlayer().getWorld().strikeLightning(event.getClickedBlock().getLocation());
+				}
+			}
+		}
+	}
+
+	@EventHandler
+	public void snail(EntityDamageByEntityEvent event) {
+		if (!(event.getDamager() instanceof Player) || !(event.getEntity() instanceof Player))
+			return;
+		if (Kit.getKit(event.getDamager().getName()) == Kit.Snail) {
+			((Player) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 15 * 20, 1));
+		}
+	}
+
+	@EventHandler
+	public void viper(EntityDamageByEntityEvent event) {
+		if (!(event.getDamager() instanceof Player) || !(event.getEntity() instanceof Player))
+			return;
+		if (Kit.getKit(event.getDamager().getName()) == Kit.Viper) {
+			((Player) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.POISON, 4 * 20, 1));
+		}
+	}
+
+	@EventHandler
+	public void copycat(PlayerDeathEvent event) {
+		Player damager = (Player) ((Player) ((EntityDamageByEntityEvent) ((EntityDamageEvent) event.getEntity().getLastDamageCause())).getDamager());
+		if (Kit.getKit(damager.getName()) == Kit.Copycat) {
+			Kit.setKit(damager.getName(), Kit.getKit(event.getEntity().getName()));
+			givePlayerKitItems(damager);
+		}
+	}
+
 }
+
+
+
+
+
 
 
 
